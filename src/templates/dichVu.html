@@ -1,0 +1,768 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Danh Sách Dịch Vụ Spa Chuyên Nghiệp {% endblock %}
+
+{% block content %}
+<!-- Bootstrap Icons & Google Fonts for aesthetic spa look -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --spa-primary: #1b382b;
+    --spa-accent: #c49a45;
+    --spa-accent-soft: #fbf5e8;
+    --spa-bg-soft: #f8faf8;
+    --spa-text: #2d3748;
+    --spa-muted: #64748b;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--spa-text);
+  }
+
+  .serif-title {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .service-hero {
+    background: linear-gradient(135deg, rgba(27, 56, 43, 0.92), rgba(38, 77, 60, 0.88)),
+      url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 50px 30px;
+    margin-top: 25px;
+    margin-bottom: 35px;
+    box-shadow: 0 10px 30px rgba(27, 56, 43, 0.15);
+  }
+
+  .badge-category {
+    background-color: var(--spa-accent-soft);
+    color: #8c6b1f;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 30px;
+    border: 1px solid rgba(196, 154, 69, 0.3);
+  }
+
+  .nav-pills-spa .nav-link {
+    color: var(--spa-text);
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 30px;
+    padding: 9px 20px;
+    margin: 4px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+  }
+
+  .nav-pills-spa .nav-link.active,
+  .nav-pills-spa .nav-link:hover {
+    background-color: var(--spa-primary);
+    border-color: var(--spa-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(27, 56, 43, 0.2);
+  }
+
+  .card-service {
+    border: 1px solid #e9ecef;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #ffffff;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-service:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+    border-color: #c49a45;
+  }
+
+  .card-service-img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .price-highlight {
+    color: #b33939;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .old-price {
+    text-decoration: line-through;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-right: 6px;
+  }
+
+  .btn-spa-book {
+    background-color: var(--spa-primary);
+    color: #ffffff;
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 8px 18px;
+    transition: all 0.2s ease;
+    border: none;
+  }
+
+  .btn-spa-book:hover {
+    background-color: #264d3c;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(27, 56, 43, 0.25);
+  }
+
+  .combo-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #dc3545;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.4);
+  }
+
+  .feature-item {
+    font-size: 0.85rem;
+    color: #4b5563;
+    margin-bottom: 4px;
+  }
+</style>
+
+<div class="container pb-5">
+  <!-- Hero Banner -->
+  <div class="service-hero text-center">
+    <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-semibold mb-3">
+      Dịch Vụ Thư Giãn & Trị Liệu
+    </span>
+    <h1 class="serif-title display-5 fw-bold mb-3">Khám Phá Dịch Vụ Spa Toàn Diện</h1>
+    <p class="lead mx-auto mb-4" style="max-width: 750px; font-weight: 300;">
+      Hòa mình vào không gian tĩnh lặng cùng các liệu trình làm đẹp chuẩn quốc tế, liệu pháp massage dưỡng sinh và các gói combo chăm sóc toàn thân chuyên sâu.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="#combo-section" class="btn btn-warning rounded-pill px-4 py-2 fw-semibold shadow-sm">
+        <i class="bi me-1"></i> Xem Gói Combo Ưu Đãi
+      </a>
+      <a href="/dat-lich" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
+        <i class="bi bi-calendar-check me-1"></i> Đặt Lịch Ngay
+      </a>
+    </div>
+  </div>
+
+  <!-- Search & Category Filters -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <!-- Filter Tabs -->
+    <ul class="nav nav-pills nav-pills-spa" id="serviceTabs" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active" onclick="filterServices('all', this)">
+          <i class="bi bi-grid-fill me-1"></i> Tất Cả
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" onclick="filterServices('skin', this)">
+          <i class="bi me-1"></i> Chăm Sóc Da
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" onclick="filterServices('massage', this)">
+          <i class="bi me-1"></i> Massage Body
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" onclick="filterServices('combo', this)">
+          <i class="bi me-1 text-warning"></i> Gói Combo Hot
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" onclick="filterServices('beauty', this)">
+          <i class="bi me-1"></i> Làm Đẹp & Nail
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" onclick="filterServices('other', this)">
+          <i class="bi me-1"></i> Dịch Vụ Khác
+        </button>
+      </li>
+    </ul>
+
+    <!-- Quick Search Input -->
+    <div style="min-width: 250px;">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" id="serviceSearchInput" class="form-control border-start-0" placeholder="Tìm tên dịch vụ..." onkeyup="searchService(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid of Services -->
+  <div class="row g-4" id="serviceGrid">
+
+    <!-- ===== NHÓM 1: GÓI COMBO ĐẶC BIỆT ===== -->
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="combo" id="combo-section">
+      <div class="card-service position-relative border-warning shadow-sm">
+        <span class="combo-badge">Tiết kiệm 30%</span>
+        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=700&q=80" alt="Combo Massage và Chăm Sóc Body" class="card-service-img">
+        <div class="p-4 d-flex flex-direction-column flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bil me-1"></i> Combo Độc Quyền</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>120 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Combo Massage Đá Nóng + Chăm Sóc Body</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Gói trị liệu kép: Tẩy tế bào chết toàn thân bằng muối khoáng cà phê + Massage thư giãn cơ bắp với đá nóng bazan và tinh dầu cao cấp.
+          </p>
+          <div class="bg-light p-2 rounded-3 mb-3">
+            <div class="feature-item"><i class="bi bi-check-circle-fill text-success me-1"></i> Tẩy tế bào chết body (45p)</div>
+            <div class="feature-item"><i class="bi bi-check-circle-fill text-success me-1"></i> Massage đá nóng thải độc (75p)</div>
+            <div class="feature-item"><i class="bi bi-check-circle-fill text-success me-1"></i> Tặng suất ngâm bồn thảo mộc</div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <div>
+              <span class="old-price">850.000đ</span>
+              <span class="price-highlight">590.000đ</span>
+            </div>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Combo Massage Đá Nóng + Chăm Sóc Body', '590.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="combo">
+      <div class="card-service position-relative border-warning shadow-sm">
+        <span class="combo-badge">Bán chạy nhất</span>
+        <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=80" alt="Combo Nàng Thơ" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Combo Thư Giãn</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>100 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Combo Nàng Thơ (Da Mặt + Gội Đầu)</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Sự kết hợp hoàn hảo giữa chăm sóc da mặt thanh lọc cấp ẩm chuyên sâu và bài gội đầu dưỡng sinh canh thuốc Trung Hoa đã thông kinh lạc.
+          </p>
+          <div class="bg-light p-2 rounded-3 mb-3">
+            <div class="feature-item"><i class="bi bi-check-circle-fill text-success me-1"></i> Chăm sóc da chuyên sâu 10 bước</div>
+            <div class="feature-item"><i class="bi bi-check-circle-fill text-success me-1"></i> Gội đầu dưỡng sinh & masage cổ vai gáy</div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <div>
+              <span class="old-price">680.000đ</span>
+              <span class="price-highlight">480.000đ</span>
+            </div>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Combo Nàng Thơ (Da Mặt + Gội Đầu)', '480.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="combo">
+      <div class="card-service position-relative border-warning shadow-sm">
+        <span class="combo-badge">VIP Cặp Đôi</span>
+        <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=700&q=80" alt="Combo Couple Spa" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi text-danger me-1"></i> Gói Couple</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>120 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Combo Cặp Đôi Uyên Ương (2 Khách)</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Trải nghiệm không gian riêng tư với phòng VIP đôi: Massage body Aroma trị liệu, xông hơi tinh dầu sả chanh và thưởng trà thảo dược.
+          </p>
+          <div class="bg-light p-2 rounded-3 mb-3">
+            <div class="feature-item"><i class="bi bi-check-circle-fill text-success me-1"></i> Phòng VIP đôi nến thơm riêng biệt</div>
+            <div class="feature-item"><i class="bi bi-check-circle-fill text-success me-1"></i> Massage thư giãn 2 người đồng thời</div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <div>
+              <span class="old-price">1.500.000đ</span>
+              <span class="price-highlight">1.090.000đ</span>
+            </div>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Combo Cặp Đôi Uyên Ương (2 Khách)', '1.090.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NHÓM 2: CHĂM SÓC DA ===== -->
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="skin">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1512290900672-1f416d8a43fe?auto=format&fit=crop&w=700&q=80" alt="Chăm sóc da cấp ẩm chuyên sâu" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Chăm Sóc Da</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>60 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Chăm Sóc Da Cấp Ẩm Chuyên Sâu</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Làm sạch sâu bã nhờn, tẩy da chết enzym sinh học, điện di HA đa tầng giúp da ngậm nước căng bóng và phục hồi màng bảo vệ tự nhiên.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">350.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Chăm Sóc Da Cấp Ẩm Chuyên Sâu', '350.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="skin">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=700&q=80" alt="Trị mụn y khoa chuẩn da liễu" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Chuẩn Y Khoa</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>75 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Trị Mụn & Thanh Lọc Da Chuẩn Y Khoa</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Kỹ thuật lấy nhân mụn không đau, không để lại thâm, kết hợp chiếu ánh sáng sinh học kháng khuẩn Bio-Light và đắp mặt nạ kháng viêm thảo dược.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">400.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Trị Mụn & Thanh Lọc Da Chuẩn Y Khoa', '400.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="skin">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=700&q=80" alt="Cấy tinh chất Collagen trẻ hóa" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Trẻ Hóa Da</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1">75 phút</i></span>
+          </div>
+          <h5 class="fw-bold mb-2">Cấy Tinh Chất Trẻ Hóa Collagen Tươi</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Ứng dụng công nghệ phi kim vi điểm đưa dưỡng chất Collagen tươi và tế bào gốc thực vật thẩm thấu sâu, cải thiện nếp nhăn và độ đàn hồi.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">550.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Cấy Tinh Chất Trẻ Hóa Collagen Tươi', '550.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NHÓM 3: MASSAGE BODY ===== -->
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="massage">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=700&q=80" alt="Massage body tinh dầu thảo dược" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Massage Body</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>60 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Massage Body Tinh Dầu Thảo Dược</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Phương pháp vuốt ấn huyệt truyền thống kết hợp tinh dầu lavender hoặc tràm gió nguyên chất, giải tỏa ứ tắc cơ bắp và mệt mỏi văn phòng.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">320.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Massage Body Tinh Dầu Thảo Dược', '320.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="massage">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=700&q=80" alt="Massage body đá nóng Himalaya" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Trị Liệu Đá Nóng</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>75 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Massage Body Đá Nóng Himalaya</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Sử dụng đá núi lửa bazan và đá muối hồng giữ nhiệt đặt lên các luân xa lưng và khớp gối, truyền dẫn nhiệt ấm xoa dịu đau nhức xương khớp.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">390.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Massage Body Đá Nóng Himalaya', '390.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="massage">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=700&q=80" alt="Massage cổ vai gáy chuyên sâu" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Trị Liệu Cổ Vai Gáy</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>45 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Trị Liệu Cổ Vai Gáy Chuyên Sâu</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Tập trung giải tỏa điểm thắt cơ vùng cổ, hai vai và bả vai gáy. Hỗ trợ đắc lực cho người làm việc máy tính, giảm đau đầu và mất ngủ.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">250.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Trị Liệu Cổ Vai Gáy Chuyên Sâu', '250.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NHÓM 4: LÀM ĐẸP (BEAUTY & NAILS) ===== -->
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="beauty">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=700&q=80" alt="Chăm sóc và làm đẹp móng tay chân" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Làm Đẹp Móng</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>50 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Combo Chăm Sóc Móng Spa Cao Cấp</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Ngâm chân thảo dược cánh hoa hồng, cắt tỉa da thừa sạch êm ái, tẩy tế bào chết mu bàn tay/chân và sơn gel phủ bóng giữ màu bền lâu.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">220.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Combo Chăm Sóc Móng Spa Cao Cấp', '220.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="beauty">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=700&q=80" alt="Nối mi thiết kế tự nhiên" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Nối & Uốn Mi</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>60 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Nối Mi Thiết Kế / Uốn Mi Collagen</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Sợi mi lụa tơ tằm siêu nhẹ, không cộm ngứa hay nặng mắt. Tạo dáng mi tự nhiên cong vút quyến rũ theo từng đường nét dáng mắt.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">280.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Nối Mi Thiết Kế / Uốn Mi Collagen', '280.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="beauty">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&w=700&q=80" alt="Triệt lông Diode Laser" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Công Nghệ Cao</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>30 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Triệt Lông Vĩnh Viễn Diode Laser</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Đầu lạnh âm băng bảo vệ bề mặt da, ức chế nang lông phát triển, đồng thời se khít lỗ chân lông và làm đều màu vùng da điều trị.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">199.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Triệt Lông Vĩnh Viễn Diode Laser', '199.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NHÓM 5: DỊCH VỤ KHÁC ===== -->
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="other">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=700&q=80" alt="Gội đầu dưỡng sinh thảo dược" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Dưỡng Sinh</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>60 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Gội Đầu Dưỡng Sinh Thảo Dược</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Gội đầu bằng nước bồ kết, vỏ bưởi, sả chanh nấu thủ công. Kết hợp bấm huyệt vùng đầu, chải thông kinh lạc và đắp mặt nạ mắt thư giãn.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">180.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Gội Đầu Dưỡng Sinh Thảo Dược', '180.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="other">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=700&q=80" alt="Xông hơi đá muối thải độc" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Thải Độc Body</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>45 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Xông Hơi Đá Muối Himalaya Thải Độc</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Nhiệt lượng từ vách đá muối hồng phát tán ion âm tự nhiên, kích thích bài tiết độc tố qua tuyến mồ hôi, cải thiện giấc ngủ và làn da.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">150.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Xông Hơi Đá Muối Himalaya Thải Độc', '150.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 service-card-item" data-category="other">
+      <div class="card-service">
+        <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=700&q=80" alt="Tắm trắng phi thuyền thảo mộc" class="card-service-img">
+        <div class="p-4 d-flex flex-grow-1 flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge-category"><i class="bi me-1"></i> Tắm Trắng</span>
+            <span class="text-muted small"><i class="bi bi-clock me-1"></i>90 phút</span>
+          </div>
+          <h5 class="fw-bold mb-2">Tắm Trắng Phi Thuyền Thảo Mộc Hoàng Gia</h5>
+          <p class="text-muted small mb-3 flex-grow-1">
+            Ứng dụng ánh sáng hồng ngoại phi thuyền đẩy tinh chất cám gạo, ngọc trai và sữa tươi vào hạ bì, nâng 2-3 tone da an toàn, không bào mòn.
+          </p>
+          <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+            <span class="price-highlight">650.000đ</span>
+            <button class="btn btn-spa-book" onclick="openBookingQuick('Tắm Trắng Phi Thuyền Thảo Mộc Hoàng Gia', '650.000đ')">
+              Đặt Lịch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cam kết & Lợi ích khách hàng -->
+  <div class="mt-5 p-4 bg-light rounded-4 border">
+    <div class="row g-4 text-center">
+      <div class="col-md-3">
+        <div class="fs-2 text-success mb-2"><i class="bi bi-patch-check"></i></div>
+        <h6 class="fw-bold">100% Thảo Mộc Thiên Nhiên</h6>
+        <p class="text-muted small mb-0">Sản phẩm hữu cơ lành tính, an toàn tuyệt đối cho mọi làn da.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="fs-2 text-warning mb-2"><i class="bi bi-award"></i></div>
+        <h6 class="fw-bold">Kỹ Thuật Viên Tay Nghề Cao</h6>
+        <p class="text-muted small mb-0">Đào tạo bài bản theo tiêu chuẩn spa trị liệu quốc tế.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="fs-2 text-primary mb-2"><i class="bi bi-door-closed"></i></div>
+        <h6 class="fw-bold">Phòng Riêng Biệt & Tiệt Trùng</h6>
+        <p class="text-muted small mb-0">Khăn, dụng cụ được khử khuẩn UV sau mỗi lượt khách.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="fs-2 text-danger mb-2"><i class="bi bi-telephone-inbound"></i></div>
+        <h6 class="fw-bold">Hỗ Trợ Đặt Lịch Nhanh</h6>
+        <p class="text-muted small mb-0">Hotline tư vấn và giữ chỗ miễn phí 24/7: 1900 6868.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Đặt Lịch Nhanh Dịch Vụ -->
+<div class="modal fade" id="quickBookingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 shadow">
+      <div class="modal-header bg-dark text-white border-0 py-3">
+        <h5 class="modal-title fs-5 fw-bold"><i class="bi bi-calendar2-check text-warning me-2"></i> Đăng Ký Giữ Chỗ Dịch Vụ</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="quickBookingForm" onsubmit="event.preventDefault(); confirmBookingAction();">
+        <div class="modal-body p-4">
+          <div class="alert alert-light border p-2 mb-3 d-flex justify-content-between align-items-center">
+            <div>
+              <small class="text-muted d-block">Dịch vụ đã chọn:</small>
+              <strong id="modalServiceName" class="text-success">...</strong>
+            </div>
+            <div>
+              <span id="modalServicePrice" class="badge bg-danger fs-6">...</span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Họ và Tên khách hàng *</label>
+            <input type="text" class="form-control" id="customerName" placeholder="Ví dụ: Nguyễn Văn A" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Số điện thoại liên hệ *</label>
+            <input type="tel" class="form-control" id="customerPhone" placeholder="Ví dụ: 0912 345 678" required>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label small fw-bold">Ngày hẹn *</label>
+              <input type="date" class="form-control" id="appointmentDate" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold">Khung giờ *</label>
+              <select class="form-select" id="appointmentHour" required>
+                <option value="09:00">09:00 Sáng</option>
+                <option value="10:30">10:30 Sáng</option>
+                <option value="14:00" selected>14:00 Chiều</option>
+                <option value="16:00">16:00 Chiều</option>
+                <option value="18:00">18:00 Tối</option>
+                <option value="19:30">19:30 Tối</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Ghi chú thêm (yêu cầu KTV, dị ứng...)</label>
+            <textarea class="form-control" id="customerNotes" rows="2" placeholder="Ghi chú nếu quý khách có yêu cầu riêng"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-spa-book px-4">Xác Nhận Giữ Chỗ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Thông Báo Đặt Thành Công -->
+<div class="modal fade" id="successBookingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-4 text-center p-4">
+      <div class="modal-body">
+        <div class="text-success display-3 mb-2"><i class="bi bi-check-circle-fill"></i></div>
+        <h4 class="fw-bold mb-2">Đăng Ký Thành Công!</h4>
+        <p class="text-muted small mb-3">
+          Cảm ơn bạn <strong id="successCustomerName"></strong>! Chúng tôi đã ghi nhận lịch hẹn dịch vụ <strong id="successServiceName"></strong> vào lúc <span id="successDateTime"></span>.
+        </p>
+        <div class="alert alert-warning small mb-3">
+          <i class="bi bi-telephone-outbound me-1"></i> Nhân viên tư vấn sẽ liên hệ xác nhận và hướng dẫn chuẩn bị trong vòng 10 phút.
+        </div>
+        <button type="button" class="btn btn-spa-book w-100" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Set ngày hẹn mặc định là ngày mai
+  document.addEventListener("DOMContentLoaded", function() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dateInput = document.getElementById("appointmentDate");
+    if (dateInput) {
+      dateInput.min = new Date().toISOString().split("T")[0];
+      dateInput.value = tomorrow.toISOString().split("T")[0];
+    }
+  });
+
+  // Lọc dịch vụ theo danh mục
+  function filterServices(category, btnElement) {
+    document.querySelectorAll(".nav-pills-spa .nav-link").forEach(el => el.classList.remove("active"));
+    if (btnElement) {
+      btnElement.classList.add("active");
+    }
+
+    const items = document.querySelectorAll(".service-card-item");
+    items.forEach(item => {
+      const itemCategory = item.getAttribute("data-category");
+      if (category === "all" || itemCategory === category) {
+        item.style.display = "block";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  }
+
+  // Tìm kiếm dịch vụ theo tên
+  function searchService(query) {
+    const q = query.toLowerCase().trim();
+    const items = document.querySelectorAll(".service-card-item");
+    items.forEach(item => {
+      const text = item.innerText.toLowerCase();
+      if (text.includes(q)) {
+        item.style.display = "block";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  }
+
+  // Mở popup đặt lịch nhanh
+  function openBookingQuick(serviceName, price) {
+    document.getElementById("modalServiceName").innerText = serviceName;
+    document.getElementById("modalServicePrice").innerText = price;
+    const modal = new bootstrap.Modal(document.getElementById("quickBookingModal"));
+    modal.show();
+  }
+
+  // shortcut: lưu tạm localStorage và hiển thị modal thành công trước khi kết nối DB /api/appointments
+  function confirmBookingAction() {
+    const serviceName = document.getElementById("modalServiceName").innerText;
+    const customerName = document.getElementById("customerName").value;
+    const customerPhone = document.getElementById("customerPhone").value;
+    const appDate = document.getElementById("appointmentDate").value;
+    const appHour = document.getElementById("appointmentHour").value;
+
+    // Ẩn modal nhập liệu
+    const quickModalEl = document.getElementById("quickBookingModal");
+    const quickModal = bootstrap.Modal.getInstance(quickModalEl);
+    if (quickModal) {
+      quickModal.hide();
+    }
+
+    // Gán dữ liệu sang modal thành công
+    document.getElementById("successCustomerName").innerText = customerName;
+    document.getElementById("successServiceName").innerText = serviceName;
+    document.getElementById("successDateTime").innerText = `${appHour} ngày ${appDate}`;
+
+    // Lưu vào localStorage phục vụ tra cứu
+    const bookingRecord = {
+      service: serviceName,
+      customer: customerName,
+      phone: customerPhone,
+      datetime: `${appHour} - ${appDate}`,
+      createdAt: new Date().toISOString()
+    };
+    localStorage.setItem("latest_spa_booking", JSON.stringify(bookingRecord));
+
+    // Hiển thị modal thành công
+    setTimeout(() => {
+      const successModal = new bootstrap.Modal(document.getElementById("successBookingModal"));
+      successModal.show();
+      document.getElementById("quickBookingForm").reset();
+    }, 400);
+  }
+</script>
+{% endblock %}
