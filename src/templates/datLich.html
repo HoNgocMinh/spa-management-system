@@ -1,0 +1,597 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Đặt Lịch Hẹn Dịch Vụ Spa | Spa Wellness {% endblock %}
+
+{% block content %}
+<!-- Bootstrap Icons & Google Fonts -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --spa-primary: #1b382b;
+    --spa-primary-light: #2d5543;
+    --spa-accent: #c49a45;
+    --spa-accent-soft: #fbf5e8;
+    --spa-bg-soft: #f8faf8;
+    --spa-text: #2d3748;
+    --spa-muted: #64748b;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--spa-text);
+  }
+
+  /* Đồng bộ font chữ với trang dịch vụ (Plus Jakarta Sans) */
+  .serif-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .booking-hero {
+    background: linear-gradient(135deg, rgba(27, 56, 43, 0.94), rgba(38, 77, 60, 0.9)),
+      url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 45px 30px;
+    margin-top: 25px;
+    margin-bottom: 35px;
+    box-shadow: 0 10px 30px rgba(27, 56, 43, 0.15);
+  }
+
+  .form-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+  }
+
+  .summary-card {
+    background: #ffffff;
+    border: 1.5px solid #ebdcb9;
+    border-radius: 20px;
+    box-shadow: 0 12px 28px rgba(196, 154, 69, 0.12);
+    padding: 26px;
+    position: sticky;
+    top: 20px;
+  }
+
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--spa-primary);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-right: 8px;
+  }
+
+  .time-slot-btn {
+    border: 1px solid #dee2e6;
+    background: #ffffff;
+    color: var(--spa-text);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: center;
+  }
+
+  .time-slot-btn:hover {
+    border-color: var(--spa-primary);
+    color: var(--spa-primary);
+  }
+
+  .time-slot-btn.active {
+    background-color: var(--spa-primary);
+    border-color: var(--spa-primary);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(27, 56, 43, 0.2);
+  }
+
+  .btn-confirm-booking {
+    background-color: var(--spa-primary);
+    color: #ffffff;
+    border-radius: 30px;
+    font-weight: 600;
+    padding: 12px 24px;
+    width: 100%;
+    border: none;
+    transition: all 0.25s ease;
+    font-size: 1.05rem;
+  }
+
+  .btn-confirm-booking:hover {
+    background-color: var(--spa-primary-light);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(27, 56, 43, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .price-large {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #b33939;
+  }
+</style>
+
+<div class="container pb-5">
+  <!-- Booking Hero Banner -->
+  <div class="booking-hero text-center">
+    <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-semibold mb-3">
+        Trải Nghiệm Thư Giãn & Chăm Sóc
+    </span>
+    <h1 class="display-6 fw-bold mb-2">Đặt Lịch Hẹn Trực Tuyến</h1>
+    <p class="lead mx-auto mb-3" style="max-width: 680px; font-weight: 300; font-size: 1.05rem;">
+      Chọn dịch vụ, kỹ thuật viên và khung giờ bạn yêu thích. Chúng tôi sẽ chuẩn bị phòng trị liệu chu đáo nhất để đón tiếp bạn.
+    </p>
+  </div>
+
+  <div class="row g-4">
+    <!-- CỘT TRÁI: FORM ĐIỀN THÔNG TIN ĐẶT LỊCH -->
+    <div class="col-lg-8">
+      <div class="form-card">
+        <form id="spaBookingForm" onsubmit="event.preventDefault(); processBooking();">
+
+          <!-- BƯỚC 1: CHỌN DỊCH VỤ -->
+          <div class="mb-4 pb-3 border-bottom">
+            <h5 class="fw-bold mb-3 d-flex align-items-center">
+              <span class="step-number">1</span> Chọn Dịch Vụ / Gói Trị Liệu *
+            </h5>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label small fw-bold text-muted">Dịch vụ mong muốn:</label>
+                <select class="form-select form-select-lg" id="bookingService" required onchange="onServiceChange();">
+                  <option value="" disabled selected>-- Vui lòng chọn gói dịch vụ --</option>
+
+                  <optgroup label="GÓI COMBO SIÊU TIẾT KIỆM">
+                    <option value="Combo Massage Đá Nóng + Chăm Sóc Body" data-price="590000" data-duration="120" data-category="Combo">
+                      Combo Massage Đá Nóng + Chăm Sóc Body (120p) - 590.000đ
+                    </option>
+                    <option value="Combo Nàng Thơ (Da Mặt + Gội Đầu)" data-price="480000" data-duration="100" data-category="Combo">
+                      Combo Nàng Thơ: Chăm sóc da + Gội đầu (100p) - 480.000đ
+                    </option>
+                    <option value="Combo Cặp Đôi Uyên Ương (2 Khách)" data-price="1090000" data-duration="120" data-category="Combo">
+                      Combo Cặp Đôi Uyên Ương VIP 2 khách (120p) - 1.090.000đ
+                    </option>
+                  </optgroup>
+
+                  <optgroup label="CHĂM SÓC DA & FACIAL">
+                    <option value="Chăm Sóc Da Cấp Ẩm Chuyên Sâu" data-price="350000" data-duration="60" data-category="Chăm sóc da">
+                      Chăm Sóc Da Cấp Ẩm Chuyên Sâu (60p) - 350.000đ
+                    </option>
+                    <option value="Trị Mụn & Thanh Lọc Da Chuẩn Y Khoa" data-price="400000" data-duration="75" data-category="Chăm sóc da">
+                      Trị Mụn & Thanh Lọc Chuẩn Y Khoa (75p) - 400.000đ
+                    </option>
+                    <option value="Cấy Tinh Chất Trẻ Hóa Collagen Tươi" data-price="550000" data-duration="75" data-category="Chăm sóc da">
+                      Cấy Tinh Chất Trẻ Hóa Collagen (75p) - 550.000đ
+                    </option>
+                  </optgroup>
+
+                  <optgroup label="MASSAGE BODY THƯ GIÃN">
+                    <option value="Massage Body Tinh Dầu Thảo Dược" data-price="320000" data-duration="60" data-category="Massage">
+                      Massage Body Tinh Dầu Thảo Dược (60p) - 320.000đ
+                    </option>
+                    <option value="Massage Body Đá Nóng Himalaya" data-price="390000" data-duration="75" data-category="Massage">
+                      Massage Body Đá Nóng Himalaya (75p) - 390.000đ
+                    </option>
+                    <option value="Trị Liệu Cổ Vai Gáy Chuyên Sâu" data-price="250000" data-duration="45" data-category="Massage">
+                      Trị Liệu Cổ Vai Gáy Chuyên Sâu (45p) - 250.000đ
+                    </option>
+                  </optgroup>
+
+                  <optgroup label="LÀM ĐẸP & CHĂM SÓC MÓNG">
+                    <option value="Combo Chăm Sóc Móng Spa Cao Cấp" data-price="220000" data-duration="50" data-category="Làm đẹp">
+                      Combo Chăm Sóc Móng Spa (50p) - 220.000đ
+                    </option>
+                    <option value="Nối Mi Thiết Kế / Uốn Mi Collagen" data-price="280000" data-duration="60" data-category="Làm đẹp">
+                      Nối Mi Thiết Kế / Uốn Mi Collagen (60p) - 280.000đ
+                    </option>
+                    <option value="Triệt Lông Vĩnh Viễn Diode Laser" data-price="199000" data-duration="30" data-category="Làm đẹp">
+                      Triệt Lông Diode Laser (30p) - 199.000đ
+                    </option>
+                  </optgroup>
+
+                  <optgroup label="DỊCH VỤ DƯỠNG SINH & KHÁC">
+                    <option value="Gội Đầu Dưỡng Sinh Thảo Dược" data-price="180000" data-duration="60" data-category="Dưỡng sinh">
+                      Gội Đầu Dưỡng Sinh Thảo Dược (60p) - 180.000đ
+                    </option>
+                    <option value="Xông Hơi Đá Muối Himalaya Thải Độc" data-price="150000" data-duration="45" data-category="Thải độc">
+                      Xông Hơi Đá Muối Himalaya (45p) - 150.000đ
+                    </option>
+                    <option value="Tắm Trắng Phi Thuyền Thảo Mộc Hoàng Gia" data-price="650000" data-duration="90" data-category="Tắm trắng">
+                      Tắm Trắng Phi Thuyền Hoàng Gia (90p) - 650.000đ
+                    </option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- BƯỚC 2: CHUYÊN VIÊN & LOẠI PHÒNG -->
+          <div class="mb-4 pb-3 border-bottom">
+            <h5 class="fw-bold mb-3 d-flex align-items-center">
+              <span class="step-number">2</span> Kỹ Thuật Viên & Loại Phòng
+            </h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Kỹ thuật viên thực hiện:</label>
+                <select class="form-select" id="bookingTherapist" onchange="updateSummary();">
+                  <option value="Kỹ thuật viên bất kỳ (Sớm nhất)" selected>Kỹ thuật viên bất kỳ (Phục vụ sớm nhất)</option>
+                  <option value="KTV. Nguyễn Lan (Chuyên viên Massage)">KTV. Nguyễn Lan (Chuyên Massage trị liệu)</option>
+                  <option value="KTV. Mai Anh (Chuyên viên Chăm sóc da)">KTV. Mai Anh (Chuyên Chăm sóc da & Facial)</option>
+                  <option value="KTV. Phương Thảo (Chuyên Dưỡng sinh & Nail)">KTV. Phương Thảo (Chuyên Dưỡng sinh & Nail)</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Yêu cầu phòng trị liệu:</label>
+                <select class="form-select" id="bookingRoom" onchange="updateSummary();">
+                  <option value="Phòng tiêu chuẩn yên tĩnh" selected>Phòng tiêu chuẩn yên tĩnh</option>
+                  <option value="Phòng VIP thảo dược riêng biệt">Phòng VIP thảo dược riêng biệt (+0đ)</option>
+                  <option value="Phòng Cặp Đôi (Couple Suite)">Phòng Cặp Đôi (Dành cho 2 người)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- BƯỚC 3: NGÀY & GIỜ HẸN -->
+          <div class="mb-4 pb-3 border-bottom">
+            <h5 class="fw-bold mb-3 d-flex align-items-center">
+              <span class="step-number">3</span> Chọn Ngày & Giờ Hẹn *
+            </h5>
+            <div class="row g-3">
+              <div class="col-md-5">
+                <label class="form-label small fw-bold text-muted">Ngày thực hiện:</label>
+                <input type="date" class="form-control" id="bookingDate" required onchange="updateSummary();">
+              </div>
+              <div class="col-md-7">
+                <label class="form-label small fw-bold text-muted">Khung giờ tiếp đón:</label>
+                <input type="hidden" id="selectedTimeSlot" value="14:00" required>
+                <div class="row g-2">
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn" onclick="selectSlot('09:00', this)">09:00</div></div>
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn" onclick="selectSlot('10:30', this)">10:30</div></div>
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn" onclick="selectSlot('12:00', this)">12:00</div></div>
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn" onclick="selectSlot('13:30', this)">13:30</div></div>
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn active" onclick="selectSlot('14:00', this)">14:00</div></div>
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn" onclick="selectSlot('15:30', this)">15:30</div></div>
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn" onclick="selectSlot('17:00', this)">17:00</div></div>
+                  <div class="col-4 col-sm-3"><div class="time-slot-btn" onclick="selectSlot('18:30', this)">18:30</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BƯỚC 4: THÔNG TIN KHÁCH HÀNG -->
+          <div class="mb-3">
+            <h5 class="fw-bold mb-3 d-flex align-items-center">
+              <span class="step-number">4</span> Thông Tin Khách Hàng *
+            </h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Họ và tên quý khách *</label>
+                <input type="text" class="form-control" id="customerName" placeholder="Ví dụ: Trần Thị Mai" required oninput="updateSummary();">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Số điện thoại liên hệ *</label>
+                <input type="tel" class="form-control" id="customerPhone" placeholder="Ví dụ: 0987 654 321" required oninput="updateSummary();">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Địa chỉ Email (Nhận mã xác nhận):</label>
+                <input type="email" class="form-control" id="customerEmail" placeholder="mai.tran@example.com">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Địa chỉ của bạn (nếu có):</label>
+                <input type="text" class="form-control" id="customerAddress" placeholder="Quận / Thành phố...">
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold text-muted">Ghi chú sức khỏe hoặc yêu cầu riêng:</label>
+                <textarea class="form-control" id="bookingNotes" rows="2" placeholder="Ví dụ: Vui lòng dùng lực ấn nhẹ, da mỏng nhạy cảm với tinh dầu quế..."></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- CỘT PHẢI: BẢNG TỔNG KẾT & XÁC NHẬN -->
+    <div class="col-lg-4">
+      <div class="summary-card">
+        <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+          <i class="bi bi-receipt text-warning me-2"></i> Phiếu Lịch Hẹn
+        </h5>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Dịch vụ đã chọn:</small>
+          <strong id="summaryService" class="text-success fs-6">Chưa chọn dịch vụ</strong>
+          <div class="text-muted small mt-1" id="summaryDuration"><i class="bi bi-clock me-1"></i>Thời lượng: -- phút</div>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Thời gian phục vụ:</small>
+          <strong id="summaryDateTime" class="text-dark">Chưa chọn ngày giờ</strong>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Kỹ thuật viên:</small>
+          <span id="summaryTherapist" class="small text-secondary fw-semibold">Bất kỳ</span>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Khách hàng:</small>
+          <span id="summaryCustomer" class="small text-secondary">Chưa điền thông tin</span>
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="fw-bold">Tổng thanh toán:</span>
+          <span class="price-large" id="summaryPrice">0đ</span>
+        </div>
+
+        <div class="alert alert-light border small text-muted p-2 mb-3">
+          <i class="bi bi-info-circle text-primary me-1"></i> Quý khách thanh toán tiền mặt hoặc quẹt thẻ tại quầy lễ tân sau khi hoàn tất dịch vụ.
+        </div>
+
+        <button type="button" class="btn-confirm-booking" onclick="document.getElementById('spaBookingForm').requestSubmit();">
+          <i class="bi bi-check2-circle me-1"></i> Xác Nhận Đặt Lịch
+        </button>
+
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-link text-decoration-none text-muted small p-0" data-bs-toggle="modal" data-bs-target="#lookupModal">
+            <i class="bi bi-search me-1"></i> Bạn đã có lịch? Tra cứu tại đây
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tra cứu lịch hẹn Modal -->
+  <div class="modal fade" id="lookupModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-calendar2-range text-warning me-2"></i>Tra Cứu Lịch Hẹn Spa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small">Nhập số điện thoại hoặc mã phiếu để kiểm tra thông tin lịch hẹn của bạn.</p>
+          <form onsubmit="event.preventDefault(); searchMyBooking();">
+            <div class="mb-3">
+              <input type="text" class="form-control" id="searchBookingInput" placeholder="Ví dụ: 0987654321 hoặc SPA-12345" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100 rounded-pill">Tìm Lịch Hẹn</button>
+          </form>
+          <div id="lookupResultArea" class="mt-3 d-none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Xác Nhận Thành Công -->
+  <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 p-4 text-center shadow-lg">
+        <div class="modal-body">
+          <div class="text-success display-3 mb-2"><i class="bi bi-check-circle-fill"></i></div>
+          <h4 class="fw-bold mb-2">Đặt Lịch Hẹn Thành Công!</h4>
+          <p class="text-muted small mb-3">Cảm ơn quý khách đã tin tưởng dịch vụ tại Spa Wellness.</p>
+
+          <div class="p-3 bg-light rounded-3 text-start small mb-3 border">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Mã lịch hẹn:</span>
+              <strong class="text-success" id="receiptCode">SPA-00000</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Khách hàng:</span>
+              <strong id="receiptName">...</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Dịch vụ:</span>
+              <strong id="receiptService">...</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Thời gian hẹn:</span>
+              <strong id="receiptDateTime">...</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Kỹ thuật viên:</span>
+              <span id="receiptTherapist">...</span>
+            </div>
+            <div class="d-flex justify-content-between pt-2 border-top">
+              <span class="fw-bold">Thanh toán tại quầy:</span>
+              <strong class="text-danger fs-6" id="receiptPrice">0đ</strong>
+            </div>
+          </div>
+
+          <div class="alert alert-warning small mb-3 text-start">
+            <i class="bi bi-bell-fill me-1"></i> Nhân viên sẽ gọi điện xác nhận trong 15 phút. Vui lòng đến sớm 10 phút trước giờ hẹn.
+          </div>
+
+          <div class="d-flex gap-2">
+            <a href="/" class="btn btn-light rounded-pill flex-grow-1">Về Trang Chủ</a>
+            <button type="button" class="btn btn-success rounded-pill flex-grow-1" data-bs-dismiss="modal">Đã Hiểu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Thiết lập ngày tối thiểu là ngày hiện tại, mặc định là ngày mai
+  document.addEventListener("DOMContentLoaded", function() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const dateInput = document.getElementById("bookingDate");
+    if (dateInput) {
+      dateInput.min = today.toISOString().split("T")[0];
+      dateInput.value = tomorrow.toISOString().split("T")[0];
+    }
+
+    // Đọc URL param ?service= nếu người dùng chuyển sang từ trang dịch vụ
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get("service");
+    if (serviceParam) {
+      const select = document.getElementById("bookingService");
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value.toLowerCase().includes(serviceParam.toLowerCase())) {
+          select.selectedIndex = i;
+          break;
+        }
+      }
+    }
+
+    onServiceChange();
+    updateSummary();
+  });
+
+  // Chọn slot giờ
+  function selectSlot(timeStr, btnEl) {
+    document.querySelectorAll(".time-slot-btn").forEach(b => b.classList.remove("active"));
+    btnEl.classList.add("active");
+    document.getElementById("selectedTimeSlot").value = timeStr;
+    updateSummary();
+  }
+
+  // Khi thay đổi dịch vụ
+  function onServiceChange() {
+    updateSummary();
+  }
+
+  // Cập nhật thẻ tóm tắt chi phí & thông tin lịch hẹn bên phải
+  function updateSummary() {
+    const serviceSelect = document.getElementById("bookingService");
+    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+
+    const summaryService = document.getElementById("summaryService");
+    const summaryDuration = document.getElementById("summaryDuration");
+    const summaryPrice = document.getElementById("summaryPrice");
+    const summaryDateTime = document.getElementById("summaryDateTime");
+    const summaryTherapist = document.getElementById("summaryTherapist");
+    const summaryCustomer = document.getElementById("summaryCustomer");
+
+    if (selectedOption && selectedOption.value) {
+      const priceVal = parseInt(selectedOption.getAttribute("data-price") || 0);
+      const durationVal = selectedOption.getAttribute("data-duration") || "60";
+      summaryService.innerText = selectedOption.value;
+      summaryDuration.innerHTML = `<i class="bi bi-clock me-1"></i>Thời lượng: ${durationVal} phút`;
+      summaryPrice.innerText = priceVal.toLocaleString("vi-VN") + "đ";
+    } else {
+      summaryService.innerText = "Chưa chọn dịch vụ";
+      summaryDuration.innerHTML = `<i class="bi bi-clock me-1"></i>Thời lượng: -- phút`;
+      summaryPrice.innerText = "0đ";
+    }
+
+    const dateVal = document.getElementById("bookingDate").value;
+    const timeVal = document.getElementById("selectedTimeSlot").value;
+    if (dateVal) {
+      const parts = dateVal.split("-");
+      summaryDateTime.innerText = `${timeVal} ngày ${parts[2]}/${parts[1]}/${parts[0]}`;
+    } else {
+      summaryDateTime.innerText = "Chưa chọn ngày giờ";
+    }
+
+    const therapistVal = document.getElementById("bookingTherapist").value;
+    summaryTherapist.innerText = therapistVal;
+
+    const nameVal = document.getElementById("customerName").value.trim();
+    const phoneVal = document.getElementById("customerPhone").value.trim();
+    if (nameVal || phoneVal) {
+      summaryCustomer.innerText = `${nameVal} ${phoneVal ? '(' + phoneVal + ')' : ''}`;
+    } else {
+      summaryCustomer.innerText = "Chưa điền thông tin";
+    }
+  }
+
+  // shortcut: lưu tạm localStorage và hiển thị modal thành công trước khi kết nối DB /api/dat-lich
+  function processBooking() {
+    const serviceSelect = document.getElementById("bookingService");
+    if (!serviceSelect.value) {
+      alert("Vui lòng chọn dịch vụ muốn thực hiện.");
+      serviceSelect.focus();
+      return;
+    }
+
+    const customerName = document.getElementById("customerName").value.trim();
+    const customerPhone = document.getElementById("customerPhone").value.trim();
+    const dateVal = document.getElementById("bookingDate").value;
+    const timeVal = document.getElementById("selectedTimeSlot").value;
+    const therapistVal = document.getElementById("bookingTherapist").value;
+    const serviceVal = serviceSelect.value;
+    const priceVal = document.getElementById("summaryPrice").innerText;
+
+    const randomCode = "SPA-" + Math.floor(10000 + Math.random() * 90000);
+
+    // Gán dữ liệu sang Receipt Modal
+    document.getElementById("receiptCode").innerText = randomCode;
+    document.getElementById("receiptName").innerText = customerName;
+    document.getElementById("receiptService").innerText = serviceVal;
+    document.getElementById("receiptDateTime").innerText = `${timeVal} - ${dateVal}`;
+    document.getElementById("receiptTherapist").innerText = therapistVal;
+    document.getElementById("receiptPrice").innerText = priceVal;
+
+    // Lưu vào localStorage để tra cứu
+    const bookingRecord = {
+      code: randomCode,
+      name: customerName,
+      phone: customerPhone,
+      service: serviceVal,
+      datetime: `${timeVal} - ${dateVal}`,
+      therapist: therapistVal,
+      price: priceVal,
+      status: "Đã xác nhận giữ chỗ"
+    };
+    localStorage.setItem("latest_booking_" + customerPhone, JSON.stringify(bookingRecord));
+    localStorage.setItem("current_booking", JSON.stringify(bookingRecord));
+
+    // Hiển thị modal
+    const successModal = new bootstrap.Modal(document.getElementById("bookingSuccessModal"));
+    successModal.show();
+  }
+
+  // Tra cứu thông tin lịch hẹn đã đặt
+  function searchMyBooking() {
+    const keyword = document.getElementById("searchBookingInput").value.trim().toLowerCase();
+    const resultArea = document.getElementById("lookupResultArea");
+    resultArea.classList.remove("d-none");
+
+    const saved = localStorage.getItem("current_booking");
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.code.toLowerCase().includes(keyword) || data.phone.toLowerCase().includes(keyword)) {
+        resultArea.innerHTML = `
+          <div class="alert alert-success small mb-0">
+            <h6 class="fw-bold mb-1"><i class="bi bi-calendar-check me-1"></i> ${data.status} (${data.code})</h6>
+            <div><strong>Khách:</strong> ${data.name} - ${data.phone}</div>
+            <div><strong>Dịch vụ:</strong> ${data.service}</div>
+            <div><strong>Giờ hẹn:</strong> ${data.datetime}</div>
+            <div><strong>KTV:</strong> ${data.therapist}</div>
+            <div><strong>Phí thanh toán:</strong> ${data.price}</div>
+          </div>
+        `;
+        return;
+      }
+    }
+
+    resultArea.innerHTML = `
+      <div class="alert alert-warning small mb-0">
+        <i class="bi bi-exclamation-triangle me-1"></i> Chưa tìm thấy lịch hẹn trùng khớp với "${keyword}". Vui lòng kiểm tra lại số điện thoại hoặc gọi hotline 1900 6868 để được hỗ trợ.
+      </div>
+    `;
+  }
+</script>
+{% endblock %}

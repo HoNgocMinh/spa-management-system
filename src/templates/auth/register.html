@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng ký{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4 mx-auto" style="max-width: 400px;">
+        <h2 class="text-center text-success mb-4">ĐĂNG KÝ</h2>
+        <form method="post" action="/login">
+            <div class="form-floating mb-3 mt-3">
+              <input type="text" class="form-control" id="username" placeholder="Tên đăng nhập" name="username" />
+              <label for="username">Tên đăng nhập</label>
+            </div>
+             <div class="form-floating mb-3 mt-3">
+              <input type="password" class="form-control" id="password" placeholder="Mật khẩu" name="password" />
+              <label for="password">Mật khẩu</label>
+            </div>
+            <div class="form-floating mb-3 mt-3">
+             <input type="password" class="form-control" id="password" placeholder="Mật khẩu" name="password" />
+             <label for="password">Nhập lại mật khẩu</label>
+           </div>
+            <div class="form-floating mb-3 mt-3">
+                <input type="text" class="form-control" id="email" placeholder="Địa chỉ email" name="email" />
+                <label for="email">Email</label>
+            </div>
+            <div class="form-floating mb-3 mt-3">
+                <button class="btn btn-success">Đăng ký</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
